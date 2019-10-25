@@ -4,6 +4,7 @@ package com.example.arquieiNFE.controller;
 import com.example.arquieiNFE.NFE;
 import com.example.arquieiNFE.NfeRepository;
 import io.swagger.annotations.Api;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -34,15 +36,30 @@ public class NfeController {
         List<NFE> cache = nfeRepository.findAll();
         if(!cache.isEmpty()){
             System.out.println("Using Cache");
+
+            byte[] byteArray = Base64.decodeBase64(cache.get(0).getXml().getBytes());
+
+            System.out.println(Arrays.toString(byteArray));
+
+
+            // Print the decoded string
+
+            String decodedString = new String(byteArray);
+            System.out.println(decodedString);
             return  cache;
+
         }
+        return getNfes();
+    }
+
+    private List<NFE> getNfes() throws IOException {
         URL url = new URL("https://sandbox-api.arquivei.com.br/v1/nfe/received");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("x-api-id", "f96ae22f7c5d74fa4d78e764563d52811570588e");
         con.setRequestProperty("x-api-key", "cc79ee9464257c9e1901703e04ac9f86b0f387c2");
-        String header = con.getHeaderField("x-api-id");
+
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
