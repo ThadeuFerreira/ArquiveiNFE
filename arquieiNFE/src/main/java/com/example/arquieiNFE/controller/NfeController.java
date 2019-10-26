@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
@@ -57,6 +58,15 @@ public class NfeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @GetMapping("/values")
+    public List<LocalNFE> findAllLocalNFE(){
+        return localNfeRepository.findAll();
+    }
+    @GetMapping("/value/{accessKey}")
+    public BigDecimal findValueByAccessKey(@PathVariable String accessKey){
+        LocalNFE localNFE = localNfeRepository.findByAccessKey(accessKey);
+        return localNFE.getNfe_total_value();
+    }
     private void saveInLocalDB(List<ArquiveiNFE> cache) throws IOException {
         for ( ArquiveiNFE  arquiveiNFE: cache
              ) {

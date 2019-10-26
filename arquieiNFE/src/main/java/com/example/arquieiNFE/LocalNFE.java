@@ -2,6 +2,7 @@ package com.example.arquieiNFE;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class LocalNFE {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @JsonAlias(value = "access_key")
+    @JsonProperty(value = "access_key")
     @NaturalId
     private String accessKey;
 

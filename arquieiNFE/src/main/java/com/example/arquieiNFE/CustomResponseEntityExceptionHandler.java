@@ -24,7 +24,7 @@ public class CustomResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(NFENotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundExceptions(Exception ex, WebRequest request){
+    public final ResponseEntity<Object> handleNFENotFoundExceptions(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
