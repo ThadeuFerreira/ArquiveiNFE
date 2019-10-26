@@ -27,7 +27,7 @@ public class Swagger2Config {
     }
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("This API consumes NFE from https://sandbox-api.arquivei.com.br")
+                .description("This API consumes ArquiveiNFE from https://sandbox-api.arquivei.com.br")
                 .contact(new Contact("Thadeu Melo", "www.github.com/ThadeuFerreira", "thadeu.afm@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

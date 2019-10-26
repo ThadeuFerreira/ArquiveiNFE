@@ -1,21 +1,30 @@
 package com.example.arquieiNFE.controller;
 
 
-import com.example.arquieiNFE.NFE;
-import com.example.arquieiNFE.NfeRepository;
+import com.example.arquieiNFE.ArquiveiNFE;
+import com.example.arquieiNFE.ArquiveiNfeRepository;
+import com.example.arquieiNFE.LocalNFE;
+import com.example.arquieiNFE.LocalNfeRepository;
 import io.swagger.annotations.Api;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,31 +37,54 @@ import java.util.List;
 public class NfeController {
 
     @Autowired
-    private NfeRepository nfeRepository;
+    private ArquiveiNfeRepository arquiveiNfeRepository;
 
-    @GetMapping("/nfe")
-    public List<NFE> getEmployeeById() throws IOException {
+    @Autowired
+    private LocalNfeRepository localNfeRepository;
 
-        List<NFE> cache = nfeRepository.findAll();
+    @GetMapping("/update")
+    public List<ArquiveiNFE> updateAllNFE() throws IOException {
+
+        List<ArquiveiNFE> cache = arquiveiNfeRepository.findAll();
         if(!cache.isEmpty()){
             System.out.println("Using Cache");
 
-            byte[] byteArray = Base64.decodeBase64(cache.get(0).getXml().getBytes());
+            for ( ArquiveiNFE  arquiveiNFE: cache
+                 ) {
+                byte[] byteArray = Base64.decodeBase64(arquiveiNFE.getXml().getBytes());
 
-            System.out.println(Arrays.toString(byteArray));
+                // Print the decoded string
+
+                String xml = new String(byteArray);
+                System.out.println(xml);
+                try {
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder;
+                    builder = factory.newDocumentBuilder();
+                    InputSource is = new InputSource(new StringReader(xml));
+                    Document doc = builder.parse(is);
+                    String vNF_s = doc.getElementsByTagName("vNF").item(0).getTextContent();
+                    BigDecimal vNF = new BigDecimal(vNF_s);
+                    String accessKey = arquiveiNFE.getAccessKey();
+                    if( localNfeRepository.findByAccessKey(accessKey) == null) {
+                        LocalNFE localNFE = new LocalNFE(accessKey, vNF);
 
 
-            // Print the decoded string
+                        localNfeRepository.save(localNFE);
+                    }
+                } catch (ParserConfigurationException | SAXException e) {
+                    e.printStackTrace();
+                }
+            }
 
-            String decodedString = new String(byteArray);
-            System.out.println(decodedString);
+
             return  cache;
 
         }
         return getNfes();
     }
 
-    private List<NFE> getNfes() throws IOException {
+    private List<ArquiveiNFE> getNfes() throws IOException {
         URL url = new URL("https://sandbox-api.arquivei.com.br/v1/nfe/received");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -72,14 +104,14 @@ public class NfeController {
         JSONObject obj = new JSONObject(content.toString());
         JSONArray data = obj.getJSONArray("data");
 
-        List<NFE> retList = new ArrayList<>();
+        List<ArquiveiNFE> retList = new ArrayList<>();
         for ( Object o: data ) {
             if(o instanceof JSONObject){
                 String accessKey = ((JSONObject) o).getString("access_key");
                 String xml = ((JSONObject) o).getString("xml");
-                NFE nfe = new NFE(accessKey,xml);
-                retList.add(nfe);
-                nfeRepository.save(nfe);
+                ArquiveiNFE arquiveiNfe = new ArquiveiNFE(accessKey,xml);
+                retList.add(arquiveiNfe);
+                arquiveiNfeRepository.save(arquiveiNfe);
             }
         }
 

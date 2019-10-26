@@ -3,31 +3,30 @@ package com.example.arquieiNFE;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "nfe" )
-public class NFE {
+@Table(name = "local_nfe" )
+public class LocalNFE {
 
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @JsonAlias(value = "acess-key")
+    @JsonAlias(value = "access_key")
     @NaturalId
     private String accessKey;
 
-    @Column(length = 80000)
-    private String xml;
+    private BigDecimal nfe_total_value;
 
-    public NFE(){}
+    public LocalNFE(){}
 
-    public NFE(String accessKey, String xml) {
+    public LocalNFE(String accessKey, BigDecimal nfe_total_value) {
         this.accessKey = accessKey;
-        this.xml = xml;
+        this.nfe_total_value = nfe_total_value;
     }
 
     public long getId() {
@@ -46,11 +45,11 @@ public class NFE {
         this.accessKey = accessKey;
     }
 
-    public String getXml() {
-        return xml;
+    public BigDecimal getNfe_total_value() {
+        return nfe_total_value;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setNfe_total_value(BigDecimal nfe_total_value) {
+        this.nfe_total_value = nfe_total_value;
     }
 }
