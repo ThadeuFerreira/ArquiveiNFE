@@ -5,11 +5,14 @@ import com.example.arquieiNFE.ArquiveiNFE;
 import com.example.arquieiNFE.ArquiveiNfeRepository;
 import com.example.arquieiNFE.LocalNFE;
 import com.example.arquieiNFE.LocalNfeRepository;
+import com.example.arquieiNFE.payload.ApiResponse;
 import io.swagger.annotations.Api;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,48 +46,46 @@ public class NfeController {
     private LocalNfeRepository localNfeRepository;
 
     @GetMapping("/update")
-    public List<ArquiveiNFE> updateAllNFE() throws IOException {
+    public ResponseEntity updateAllNFE() throws IOException {
 
         List<ArquiveiNFE> cache = arquiveiNfeRepository.findAll();
         if(!cache.isEmpty()){
-            System.out.println("Using Cache");
-
-            for ( ArquiveiNFE  arquiveiNFE: cache
-                 ) {
-                byte[] byteArray = Base64.decodeBase64(arquiveiNFE.getXml().getBytes());
-
-                // Print the decoded string
-
-                String xml = new String(byteArray);
-                System.out.println(xml);
-                try {
-                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder builder;
-                    builder = factory.newDocumentBuilder();
-                    InputSource is = new InputSource(new StringReader(xml));
-                    Document doc = builder.parse(is);
-                    String vNF_s = doc.getElementsByTagName("vNF").item(0).getTextContent();
-                    BigDecimal vNF = new BigDecimal(vNF_s);
-                    String accessKey = arquiveiNFE.getAccessKey();
-                    if( localNfeRepository.findByAccessKey(accessKey) == null) {
-                        LocalNFE localNFE = new LocalNFE(accessKey, vNF);
-
-
-                        localNfeRepository.save(localNFE);
-                    }
-                } catch (ParserConfigurationException | SAXException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            return  cache;
-
+            saveInLocalDB(cache);
+            return new ResponseEntity(HttpStatus.OK);
         }
-        return getNfes();
+        getNfes();
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    private List<ArquiveiNFE> getNfes() throws IOException {
+    private void saveInLocalDB(List<ArquiveiNFE> cache) throws IOException {
+        for ( ArquiveiNFE  arquiveiNFE: cache
+             ) {
+            byte[] byteArray = Base64.decodeBase64(arquiveiNFE.getXml().getBytes());
+
+
+            String xml = new String(byteArray);
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder;
+                builder = factory.newDocumentBuilder();
+                InputSource is = new InputSource(new StringReader(xml));
+                Document doc = builder.parse(is);
+                String vNF_s = doc.getElementsByTagName("vNF").item(0).getTextContent();
+                BigDecimal vNF = new BigDecimal(vNF_s);
+                String accessKey = arquiveiNFE.getAccessKey();
+                if( localNfeRepository.findByAccessKey(accessKey) == null) {
+                    LocalNFE localNFE = new LocalNFE(accessKey, vNF);
+
+
+                    localNfeRepository.save(localNFE);
+                }
+            } catch (ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void getNfes() throws IOException {
         URL url = new URL("https://sandbox-api.arquivei.com.br/v1/nfe/received");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -96,7 +97,7 @@ public class NfeController {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
             content.append(inputLine);
         }
@@ -114,7 +115,6 @@ public class NfeController {
                 arquiveiNfeRepository.save(arquiveiNfe);
             }
         }
-
-        return retList;
+        saveInLocalDB(retList);
     }
 }
