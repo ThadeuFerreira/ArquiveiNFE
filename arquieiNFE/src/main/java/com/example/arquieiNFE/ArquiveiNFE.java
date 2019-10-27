@@ -1,14 +1,14 @@
 package com.example.arquieiNFE;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "arquivei_nfe")
+@ApiModel(description = "This is the object returned by Arquivei API")
 public class ArquiveiNFE {
 
     @Id
@@ -16,7 +16,7 @@ public class ArquiveiNFE {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @JsonAlias(value = "access_key")
+    @JsonProperty(value = "access_key")
     @NaturalId
     private String accessKey;
 

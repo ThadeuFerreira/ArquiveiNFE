@@ -1,8 +1,9 @@
 package com.example.arquieiNFE;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "local_nfe" )
+@ApiModel(description = "Contains the Access Key and total value of a NFE.")
 public class LocalNFE {
 
     @Id

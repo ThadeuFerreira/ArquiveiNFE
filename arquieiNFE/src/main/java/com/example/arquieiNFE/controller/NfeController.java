@@ -7,19 +7,19 @@ import com.example.arquieiNFE.LocalNFE;
 import com.example.arquieiNFE.LocalNfeRepository;
 import com.example.arquieiNFE.payload.ApiResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,6 +47,7 @@ public class NfeController {
     private LocalNfeRepository localNfeRepository;
 
     @GetMapping("/update")
+    @ApiOperation(value = "Updates local databse with data from Arquivei API")
     public ResponseEntity updateAllNFE() throws IOException {
 
         List<ArquiveiNFE> cache = arquiveiNfeRepository.findAll();
@@ -59,13 +60,22 @@ public class NfeController {
     }
 
     @GetMapping("/values")
-    public List<LocalNFE> findAllLocalNFE(){
+    @ApiOperation(value = "Return all pairs of access-keys and total NFE values")
+    public @ResponseBody
+    List<LocalNFE> findAllLocalNFE(){
         return localNfeRepository.findAll();
     }
     @GetMapping("/value/{accessKey}")
-    public BigDecimal findValueByAccessKey(@PathVariable String accessKey){
+    @ApiOperation(value = "Return total value for a NFE with given access_key")
+    public @ResponseBody BigDecimal findValueByAccessKey(@PathVariable String accessKey){
         LocalNFE localNFE = localNfeRepository.findByAccessKey(accessKey);
         return localNFE.getNfe_total_value();
+    }
+
+    @GetMapping("/nfe")
+    @ApiIgnore
+    public @ResponseBody List<ArquiveiNFE> findaAllNFE(){
+        return arquiveiNfeRepository.findAll();
     }
     private void saveInLocalDB(List<ArquiveiNFE> cache) throws IOException {
         for ( ArquiveiNFE  arquiveiNFE: cache
