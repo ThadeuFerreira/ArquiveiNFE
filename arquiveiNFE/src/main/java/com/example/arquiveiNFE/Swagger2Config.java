@@ -1,4 +1,4 @@
-package com.example.arquieiNFE;
+package com.example.arquiveiNFE;
 
 
 import static springfox.documentation.builders.PathSelectors.regex;
@@ -21,7 +21,7 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors
-                        .basePackage("com.example.arquieiNFE.controller"))
+                        .basePackage("com.example.arquiveiNFE.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build().apiInfo(apiEndPointsInfo());
     }

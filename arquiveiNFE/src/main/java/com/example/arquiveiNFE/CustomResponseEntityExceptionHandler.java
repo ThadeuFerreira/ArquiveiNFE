@@ -1,4 +1,4 @@
-package com.example.arquieiNFE;
+package com.example.arquiveiNFE;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -9,9 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>arquieiNFE</artifactId>
+	<artifactId>arquiveiNFE</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>arquieiNFE</name>
+	<name>arquiveiNFE</name>
+	<packaging>jar</packaging>
 	<description>Project for Arquivei recruitment process</description>
 
 	<properties>

@@ -1,4 +1,4 @@
-package com.example.arquieiNFE.payload;
+package com.example.arquiveiNFE.payload;
 
 
 public class ApiResponse {

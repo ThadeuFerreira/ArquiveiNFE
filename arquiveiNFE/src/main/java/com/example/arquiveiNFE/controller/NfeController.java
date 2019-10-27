@@ -1,18 +1,16 @@
-package com.example.arquieiNFE.controller;
+package com.example.arquiveiNFE.controller;
 
 
-import com.example.arquieiNFE.ArquiveiNFE;
-import com.example.arquieiNFE.ArquiveiNfeRepository;
-import com.example.arquieiNFE.LocalNFE;
-import com.example.arquieiNFE.LocalNfeRepository;
-import com.example.arquieiNFE.payload.ApiResponse;
+import com.example.arquiveiNFE.ArquiveiNFE;
+import com.example.arquiveiNFE.ArquiveiNfeRepository;
+import com.example.arquiveiNFE.LocalNFE;
+import com.example.arquiveiNFE.LocalNfeRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +30,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

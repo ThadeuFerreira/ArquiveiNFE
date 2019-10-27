@@ -1,4 +1,4 @@
-package com.example.arquieiNFE;
+package com.example.arquiveiNFE;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
