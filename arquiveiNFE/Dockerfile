@@ -20,7 +20,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY src src
 
   # Package the application
-RUN chmod +x mvnw && ./mvnw package -DskipTests
+RUN sudo chmod +x mvnw && ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
   #### Stage 2: A minimal docker image with command to run the app
