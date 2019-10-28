@@ -1,7 +1,7 @@
 package com.example.arquiveiNFE.controller;
 
 
-import com.example.arquiveiNFE.ArquiveiUtil;
+import com.example.arquiveiNFE.util.ArquiveiUtil;
 import com.example.arquiveiNFE.model.ArquiveiNFE;
 import com.example.arquiveiNFE.repository.ArquiveiNfeRepository;
 import com.example.arquiveiNFE.model.LocalNFE;
@@ -49,7 +49,7 @@ public class NfeController {
     List<LocalNFE> findAllLocalNFE(){
         return localNfeRepository.findAll();
     }
-    
+
     @GetMapping("/value/{accessKey}")
     @ApiOperation(value = "Return total value for a NFE with given access_key")
     public @ResponseBody BigDecimal findValueByAccessKey(@PathVariable String accessKey){
@@ -59,6 +59,7 @@ public class NfeController {
 
     @GetMapping("/nfe")
     @ApiIgnore
+    // Endpoint to check if NFE where loaded
     public @ResponseBody List<ArquiveiNFE> findaAllNFE(){
         return arquiveiNfeRepository.findAll();
     }

@@ -1,4 +1,4 @@
-package com.example.arquiveiNFE;
+package com.example.arquiveiNFE.util;
 
 import com.example.arquiveiNFE.model.ArquiveiNFE;
 import com.example.arquiveiNFE.model.LocalNFE;
