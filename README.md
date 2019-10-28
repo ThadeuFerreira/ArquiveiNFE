@@ -24,7 +24,11 @@ You can check the API interface opening in the browser [http://localhost:8080/sw
 
 You can connect to the database and run queries in your PostgreSQL server of choice :
 POSTGRES_CONNECTION: localhost
+
 POSTGRES_PORT: 5432
+
 POSTGRES_USER: postgres  
+
 POSTGRES_PASSWORD: postgres  
+
 POSTGRES_DB: postgres  
