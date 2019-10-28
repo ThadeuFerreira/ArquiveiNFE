@@ -53,3 +53,5 @@ POSTGRES_DB: postgres
 |id| access_key  | nfe_total_value|
 |--|--|--|
 | 202 |  35140330290824000104550010003715421390782397| 365.89 |
+
+OBS: This project has been tested in Windows 10 Pro and Linux Ubunto 16.6 server
