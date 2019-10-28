@@ -13,6 +13,7 @@ Create a project that loads a list of NFEs from [https://sandbox-api.arquivei.co
  - Clone this repository. 
  -  Inside ArquiveiNFE directory run:
 > docker-compose build
+
 > docker-compose run
 
 **Check Swagger Documentation**
