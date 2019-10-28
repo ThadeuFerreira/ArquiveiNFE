@@ -1,15 +1,18 @@
-package com.example.arquiveiNFE;
+package com.example.arquiveiNFE.model;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "arquivei_nfe")
-@ApiModel(description = "This is the object returned by Arquivei API")
-public class ArquiveiNFE {
+@Table(name = "local_nfe" )
+@ApiModel(description = "Contains the Access Key and total value of a NFE.")
+public class LocalNFE {
 
     @Id
     @JsonIgnore
@@ -20,14 +23,13 @@ public class ArquiveiNFE {
     @NaturalId
     private String accessKey;
 
-    @Column(length = 80000)
-    private String xml;
+    private BigDecimal nfe_total_value;
 
-    public ArquiveiNFE(){}
+    public LocalNFE(){}
 
-    public ArquiveiNFE(String accessKey, String xml) {
+    public LocalNFE(String accessKey, BigDecimal nfe_total_value) {
         this.accessKey = accessKey;
-        this.xml = xml;
+        this.nfe_total_value = nfe_total_value;
     }
 
     public long getId() {
@@ -46,11 +48,11 @@ public class ArquiveiNFE {
         this.accessKey = accessKey;
     }
 
-    public String getXml() {
-        return xml;
+    public BigDecimal getNfe_total_value() {
+        return nfe_total_value;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setNfe_total_value(BigDecimal nfe_total_value) {
+        this.nfe_total_value = nfe_total_value;
     }
 }

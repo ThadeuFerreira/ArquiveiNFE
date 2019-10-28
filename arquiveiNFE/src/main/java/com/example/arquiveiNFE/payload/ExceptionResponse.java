@@ -1,4 +1,4 @@
-package com.example.arquiveiNFE;
+package com.example.arquiveiNFE.payload;
 
 import java.util.Date;
 

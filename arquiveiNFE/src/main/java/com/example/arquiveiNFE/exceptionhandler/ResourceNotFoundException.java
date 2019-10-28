@@ -1,4 +1,4 @@
-package com.example.arquiveiNFE;
+package com.example.arquiveiNFE.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
