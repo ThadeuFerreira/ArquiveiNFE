@@ -29,14 +29,16 @@ public class NfeController {
     private LocalNfeRepository localNfeRepository;
 
     @GetMapping("/update")
-    @ApiOperation(value = "Updates local databse with data from Arquivei API")
+    @ApiOperation(value = "Updates local database with data from Arquivei API")
     public ResponseEntity updateAllNFE() throws IOException {
 
+        // Check if the data is load in local database
         List<ArquiveiNFE> cache = arquiveiNfeRepository.findAll();
         if(!cache.isEmpty()){
             ArquiveiUtil.saveInLocalDB(cache, localNfeRepository);
             return new ResponseEntity(HttpStatus.OK);
         }
+        // Go to Arquivei endpoint and load NFE
         ArquiveiUtil.getNfes(arquiveiNfeRepository,localNfeRepository);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -47,6 +49,7 @@ public class NfeController {
     List<LocalNFE> findAllLocalNFE(){
         return localNfeRepository.findAll();
     }
+    
     @GetMapping("/value/{accessKey}")
     @ApiOperation(value = "Return total value for a NFE with given access_key")
     public @ResponseBody BigDecimal findValueByAccessKey(@PathVariable String accessKey){

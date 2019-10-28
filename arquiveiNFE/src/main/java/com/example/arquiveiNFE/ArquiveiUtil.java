@@ -27,8 +27,11 @@ import java.util.List;
 
 public class ArquiveiUtil {
 
-
-
+    /*
+    * Saves NFEs in local database format
+    * @param cache - list of ArquiveiNFE
+    * @param localNfeRepository - JPA repository of NFE saved in local format
+    * */
     public static void saveInLocalDB(List<ArquiveiNFE> cache, LocalNfeRepository localNfeRepository) throws IOException {
         for ( ArquiveiNFE  arquiveiNFE: cache
         ) {
@@ -56,7 +59,11 @@ public class ArquiveiUtil {
             }
         }
     }
-
+    /*
+     * Hits Arquivei.com NFE endpoint and stores the
+     * @param arquiveiNfeRepository - JPA repository of Arquivei NFE
+     * @param localNfeRepository - JPA repository of local NFE format
+     * */
     public static void getNfes(ArquiveiNfeRepository arquiveiNfeRepository, LocalNfeRepository localNfeRepository) throws IOException {
         URL url = new URL("https://sandbox-api.arquivei.com.br/v1/nfe/received");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
