@@ -1,17 +1,16 @@
-**
-
 ## Arquivei Recruitment Project
 
-**
 
 **Objectives**
+
 Create a project that loads a list of NFEs from [https://sandbox-api.arquivei.com.br](https://sandbox-api.arquivei.com.br/) , store them in a local database and expose a API that returns the total value of a NFE for a givem access-key (unique for each NFE).
 
 **How to run (with Docker)**
 
  - Check if ports 8080 and 5432 are not in use. 
  - Clone this repository. 
- -  Inside ArquiveiNFE directory run:
+ - Inside ArquiveiNFE directory run:
+ 
 > docker-compose build
 
 > docker-compose run
