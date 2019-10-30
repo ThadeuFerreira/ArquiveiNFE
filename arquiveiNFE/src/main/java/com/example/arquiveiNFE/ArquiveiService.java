@@ -93,15 +93,20 @@ public class ArquiveiService {
         headers.set("x-api-id", "f96ae22f7c5d74fa4d78e764563d52811570588e");
         headers.set("x-api-key", "cc79ee9464257c9e1901703e04ac9f86b0f387c2");
         List<ArquiveiNFE> arquiveiNFE = new ArrayList<>();
-        try {
-            HttpEntity request = new HttpEntity(headers);
+        List<ArquiveiNFE> data = new ArrayList<>();
+        do {
+            try {
+                HttpEntity request = new HttpEntity(headers);
 
-            ResponseEntity<ArquiveiNFEPayload> response =
-                    restTemplate.exchange(url, HttpMethod.GET, request, ArquiveiNFEPayload.class);
-            arquiveiNFE = Objects.requireNonNull(response.getBody()).getData();
-        } catch (RestClientException e) {
-            e.printStackTrace();
-        }
+                ResponseEntity<ArquiveiNFEPayload> response =
+                        restTemplate.exchange(url, HttpMethod.GET, request, ArquiveiNFEPayload.class);
+                data = Objects.requireNonNull(response.getBody()).getData();
+                arquiveiNFE.addAll(data);
+                url = Objects.requireNonNull(response.getBody()).getPage().getNext();
+            } catch (RestClientException e) {
+                e.printStackTrace();
+            }
+        }while (!data.isEmpty());
         return arquiveiNFE;
     }
 
