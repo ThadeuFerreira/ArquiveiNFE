@@ -6,15 +6,8 @@ import com.example.arquiveiNFE.payload.ArquiveiNFEPayload;
 import com.example.arquiveiNFE.repository.ArquiveiNfeRepository;
 import com.example.arquiveiNFE.repository.LocalNfeRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -25,13 +18,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +57,6 @@ public class ArquiveiService {
                 String accessKey = arquiveiNFE.getAccessKey();
                 if( localNfeRepository.findByAccessKey(accessKey) == null) {
                     LocalNFE localNFE = new LocalNFE(accessKey, vNF);
-
-
                     localNfeRepository.save(localNFE);
                 }
             } catch (ParserConfigurationException | SAXException e) {
@@ -82,6 +70,20 @@ public class ArquiveiService {
      * @param localNfeRepository - JPA repository of local NFE format
      * */
     public void getNfes() throws IOException {
+        List<ArquiveiNFE> arquiveiNFE = getArquiveiNFEsFromHttpRequest();
+
+        List<ArquiveiNFE> retList = new ArrayList<>();
+        for ( ArquiveiNFE o: arquiveiNFE ) {
+            String accessKey = o.getAccessKey();
+            String xml = o.getXml();
+            ArquiveiNFE arquiveiNfe = new ArquiveiNFE(accessKey,xml);
+            retList.add(arquiveiNfe);
+            arquiveiNfeRepository.save(arquiveiNfe);
+        }
+        saveInLocalDB(retList);
+    }
+
+    private List<ArquiveiNFE> getArquiveiNFEsFromHttpRequest() {
         String url = "https://sandbox-api.arquivei.com.br/v1/nfe/received";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -94,25 +96,13 @@ public class ArquiveiService {
         try {
             HttpEntity request = new HttpEntity(headers);
 
-            // use `exchange` method for HTTP call
             ResponseEntity<ArquiveiNFEPayload> response =
                     restTemplate.exchange(url, HttpMethod.GET, request, ArquiveiNFEPayload.class);
             arquiveiNFE = Objects.requireNonNull(response.getBody()).getData();
         } catch (RestClientException e) {
             e.printStackTrace();
         }
-
-        List<ArquiveiNFE> retList = new ArrayList<>();
-        for ( ArquiveiNFE o: arquiveiNFE ) {
-
-            String accessKey = o.getAccessKey();
-            String xml = o.getXml();
-            ArquiveiNFE arquiveiNfe = new ArquiveiNFE(accessKey,xml);
-            retList.add(arquiveiNfe);
-            arquiveiNfeRepository.save(arquiveiNfe);
-
-        }
-        saveInLocalDB(retList);
+        return arquiveiNFE;
     }
 
 }
