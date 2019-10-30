@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "arquivei_nfe")
 @ApiModel(description = "This is the object returned by Arquivei API")
-public class ArquiveiNFE {
+public class ArquiveiNFE  {
 
     @Id
     @JsonIgnore

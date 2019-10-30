@@ -1,7 +1,7 @@
 package com.example.arquiveiNFE.controller;
 
 
-import com.example.arquiveiNFE.util.ArquiveiUtil;
+import com.example.arquiveiNFE.ArquiveiService;
 import com.example.arquiveiNFE.model.ArquiveiNFE;
 import com.example.arquiveiNFE.repository.ArquiveiNfeRepository;
 import com.example.arquiveiNFE.model.LocalNFE;
@@ -28,6 +28,9 @@ public class NfeController {
     @Autowired
     private LocalNfeRepository localNfeRepository;
 
+    @Autowired
+    private ArquiveiService arquiveiService;
+
     @GetMapping("/update")
     @ApiOperation(value = "Updates local database with data from Arquivei API")
     public ResponseEntity updateAllNFE() throws IOException {
@@ -35,11 +38,11 @@ public class NfeController {
         // Check if the data is load in local database
         List<ArquiveiNFE> cache = arquiveiNfeRepository.findAll();
         if(!cache.isEmpty()){
-            ArquiveiUtil.saveInLocalDB(cache, localNfeRepository);
+            arquiveiService.saveInLocalDB(cache);
             return new ResponseEntity(HttpStatus.OK);
         }
         // Go to Arquivei endpoint and load NFE
-        ArquiveiUtil.getNfes(arquiveiNfeRepository,localNfeRepository);
+        arquiveiService.getNfes();
         return new ResponseEntity(HttpStatus.OK);
     }
 
