@@ -2,6 +2,7 @@ package com.example.arquiveiNFE.controller;
 
 
 import com.example.arquiveiNFE.ArquiveiService;
+import com.example.arquiveiNFE.exceptionhandler.NFENotFoundException;
 import com.example.arquiveiNFE.model.ArquiveiNFE;
 import com.example.arquiveiNFE.repository.ArquiveiNfeRepository;
 import com.example.arquiveiNFE.model.LocalNFE;
@@ -16,6 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Api(value="Endpoint for Nota Fiscal Eletronica")
@@ -42,7 +44,7 @@ public class NfeController {
             return new ResponseEntity(HttpStatus.OK);
         }
         // Go to Arquivei endpoint and load NFE
-        arquiveiService.getNfes();
+        arquiveiService.getNfes("https://sandbox-api.arquivei.com.br/v1/nfe/received");
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -56,8 +58,11 @@ public class NfeController {
     @GetMapping("/value/{accessKey}")
     @ApiOperation(value = "Return total value for a NFE with given access_key")
     public @ResponseBody BigDecimal findValueByAccessKey(@PathVariable String accessKey){
-        LocalNFE localNFE = localNfeRepository.findByAccessKey(accessKey);
-        return localNFE.getNfe_total_value();
+        Optional<LocalNFE> optionalLocalNFE = localNfeRepository.findByAccessKey(accessKey);
+        if (optionalLocalNFE.isPresent()) {
+            return optionalLocalNFE.get().getNfe_total_value();
+        }
+        throw new NFENotFoundException("Could not find NFE for given Access Key");
     }
 
     @GetMapping("/nfe")

@@ -55,7 +55,7 @@ public class ArquiveiService {
                 String vNF_s = doc.getElementsByTagName("vNF").item(0).getTextContent();
                 BigDecimal vNF = new BigDecimal(vNF_s);
                 String accessKey = arquiveiNFE.getAccessKey();
-                if( localNfeRepository.findByAccessKey(accessKey) == null) {
+                if(!localNfeRepository.findByAccessKey(accessKey).isPresent()) {
                     LocalNFE localNFE = new LocalNFE(accessKey, vNF);
                     localNfeRepository.save(localNFE);
                 }
@@ -69,8 +69,8 @@ public class ArquiveiService {
      * @param arquiveiNfeRepository - JPA repository of Arquivei NFE
      * @param localNfeRepository - JPA repository of local NFE format
      * */
-    public void getNfes() throws IOException {
-        List<ArquiveiNFE> arquiveiNFE = getArquiveiNFEsFromHttpRequest();
+    public void getNfes(String url) throws IOException {
+        List<ArquiveiNFE> arquiveiNFE = getArquiveiNFEsFromHttpRequest(url);
 
         List<ArquiveiNFE> retList = new ArrayList<>();
         for ( ArquiveiNFE o: arquiveiNFE ) {
@@ -83,8 +83,7 @@ public class ArquiveiService {
         saveInLocalDB(retList);
     }
 
-    private List<ArquiveiNFE> getArquiveiNFEsFromHttpRequest() {
-        String url = "https://sandbox-api.arquivei.com.br/v1/nfe/received";
+    private List<ArquiveiNFE> getArquiveiNFEsFromHttpRequest(String url) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

@@ -27,6 +27,7 @@ public class LocalNFE {
 
     public LocalNFE(){}
 
+
     public LocalNFE(String accessKey, BigDecimal nfe_total_value) {
         this.accessKey = accessKey;
         this.nfe_total_value = nfe_total_value;
