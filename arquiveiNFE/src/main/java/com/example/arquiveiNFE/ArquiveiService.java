@@ -29,11 +29,14 @@ import java.util.Objects;
 @Service
 public class ArquiveiService {
 
-    @Autowired
-    private ArquiveiNfeRepository arquiveiNfeRepository;
+    private final ArquiveiNfeRepository arquiveiNfeRepository;
+    private final LocalNfeRepository localNfeRepository;
 
-    @Autowired
-    private LocalNfeRepository localNfeRepository;
+    public ArquiveiService(ArquiveiNfeRepository arquiveiNfeRepository, LocalNfeRepository localNfeRepository) {
+        this.arquiveiNfeRepository = arquiveiNfeRepository;
+        this.localNfeRepository = localNfeRepository;
+    }
+
     /*
      * Saves NFEs in local database format
      * @param cache - list of ArquiveiNFE

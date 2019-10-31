@@ -68,9 +68,10 @@ public class ArquiveiServiceTest {
     }
 
     @Test
-    public void saveInLocalDB() {
-        ArquiveiService arquiveiService = new ArquiveiService();
+    public void whenCashHasData_saveInLocalDB() {
         try {
+            ArquiveiService arquiveiService = new ArquiveiService(arquiveiNfeRepository, localNfeRepository);
+
             arquiveiService.saveInLocalDB(arquiveiNFES);
             List<LocalNFE> _localNFES = localNfeRepository.findAll();
 
@@ -91,5 +92,26 @@ public class ArquiveiServiceTest {
 
     @Test
     public void getNfes() {
+        ArquiveiService arquiveiService = new ArquiveiService(arquiveiNfeRepository, localNfeRepository);
+
+        try {
+
+            arquiveiService.getNfes("https://sandbox-api.arquivei.com.br/v1/nfe/received");
+
+            arquiveiService.saveInLocalDB(arquiveiNFES);
+            List<LocalNFE> _localNFES = localNfeRepository.findAll();
+
+            //then
+            assertThat(_localNFES).hasSize(88);
+            //when
+            List<ArquiveiNFE> _arquiveiNFES = arquiveiNfeRepository.findAll();
+
+            //then
+            assertThat(_arquiveiNFES).hasSize(88);
+        } catch (IOException e) {
+            assertThat(false);
+        }
+
+
     }
 }
